@@ -1,0 +1,18 @@
+name = "RaytracerChallenge"
+uuid = "26a950ab-a956-4a80-8102-664fe36ee8dc"
+authors = ["Chaitanya Kumar <chaitanyak28771@gmail.com> and contributors"]
+version = "0.1.0"
+
+[deps]
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+Octavian = "6fd5a793-0b7e-452c-907f-f8bfe9c57db4"
+StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
+
+[compat]
+julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
