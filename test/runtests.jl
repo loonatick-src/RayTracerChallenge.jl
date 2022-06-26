@@ -114,6 +114,54 @@ using LinearAlgebra: dot
     )
     @testset "Matrix basics" begin
         @test m[1,1] == 1
-        
+        # TODO        
+    end
+
+    (r, g, b) = (-0.5, 0.4, 1.7)
+    c = Color(r, g, b)
+    @testset "Color basics" begin
+        @test c.r == r
+        @test c.g == g
+        @test c.b == b
+    end
+
+    (r₁, g₁, b₁) = (1.0, 0.6, 0.75)
+    (r₂, g₂, b₂) = (0.8, 0.1, 0.25)
+    c₁ = Color(r₁, g₁, b₁)
+    c₂ = Color(r₂, g₂, b₂)
+    @testset  "Color operations" begin
+        @test c₁ + c₂ == Color(r₁ + r₂, g₁ + g₂, b₁ + b₂)
+        @test c₁ - c₂ == Color(r₁ - r₂, g₁ - g₂, b₁ - b₂)
+        @test c * 2 == Color(-1.0, 0.8, 3.4)
+        @test c₁ * c₂ == Color(r₁ * r₂, g₁ * g₂, b₁ * b₂)
+    end
+
+    @testset "Canvas tests" begin
+        Ftype = Float16
+        cnvs = Canvas(10, 20, Ftype)
+        @testset "Canvas constructors" begin
+            @test cnvs.width == 10
+            @test cnvs.height == 20
+            @testset "Canvas constructor grid" begin
+                z = zero(eltype(cnvs.grid))
+                for c in cnvs.grid
+                    @test c == z
+                end
+            end
+        end
+
+        @testset "Canvas editing" begin
+            red = Color{Ftype}(1, 0, 0)
+            write_pixel(cnvs, 2, 3, red)
+            @test cnvs.grid[2,3] == red
+        end
+
+        @testset "Canvas to PPM" begin
+            c = Canvas(5, 3, Float16)
+            ppm = canvas_to_ppm(c)
+            @test ppm == "P3
+5 3
+255"
+        end
     end
 end
