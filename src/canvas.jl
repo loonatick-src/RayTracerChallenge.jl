@@ -5,15 +5,14 @@ struct Canvas{F <: Number}
     grid::Matrix{Color{F}}
 
     function Canvas(w, h, ::Type{F}) where {F <: Number}
-        # width  == columns
-        # height == rows
-        g = zeros(Color{F}, h, w)
+        # store image in row-major order
+        g = zeros(Color{F}, w, h)
         new{F}(w, h, g)
     end
 end
 
 function write_pixel(c::Canvas, x, y, clr)
-    c.grid[y,x] = clr
+    c.grid[x,y] = clr
 end
 
 function ppm_scale(f; max_val=255)
@@ -31,12 +30,12 @@ function canvas_to_ppm(c::Canvas; max_val=255)
     (w, h) = (c.width, c.height)
     ppm_string = "P3\n$(w) $(h)\n$(max_val)\n"
     # uncoalesced memory access RIP
-    for row in eachrow(c.grid)
-        for clr in row[1:end-1]
+    for img_row in eachcol(c.grid)
+        for clr in img_row[1:end-1]
             (r, g, b) = ppm_scale(clr; max_val=max_val)
             ppm_string *= "$(r) $(g) $(b) "
         end
-        (r, g, b) = ppm_scale(row[end])
+        (r, g, b) = ppm_scale(img_row[end])
         ppm_string *= "$(r) $(g) $(b)\n"
     end
     ppm_string
