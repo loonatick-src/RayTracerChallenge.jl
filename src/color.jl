@@ -33,7 +33,7 @@ import Base: *
 import Base: zero
 
 # kinda ugly perhaps. I hope the compiler cleans it up
-zero(c::Color{T}) where {T} = begin
+function zero(c::Color{T}) where {T}
     z = zero(T)
     Color(z, z, z)
 end

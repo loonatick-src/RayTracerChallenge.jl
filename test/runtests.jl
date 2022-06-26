@@ -153,15 +153,43 @@ using LinearAlgebra: dot
         @testset "Canvas editing" begin
             red = Color{Ftype}(1, 0, 0)
             write_pixel(cnvs, 2, 3, red)
-            @test cnvs.grid[2,3] == red
+            @test cnvs.grid[3,2] == red
         end
 
         @testset "Canvas to PPM" begin
             c = Canvas(5, 3, Float16)
-            ppm = canvas_to_ppm(c)
+            ppm = canvas_to_ppm(5, 3)
             @test ppm == "P3
 5 3
 255"
+        end
+
+        @testset "PPM Pixel data" begin
+            # construct canvas
+            Ftype = Float16
+            c = Canvas(5, 3, Ftype)
+            # 3 rows, 5 columns
+            @test size(c.grid) == (3, 5)
+            # construct colors for writing to canvas
+            c₁ = Color{Ftype}(1.5, 0, 0)
+            c₂ = Color{Ftype}(0, 0.5, 0)
+            c₃ = Color{Ftype}(-0.5, 0, 1)
+            # write colors to canvas
+            write_pixel(c, 1, 1, c₁)
+            write_pixel(c, 3, 2, c₂)
+            write_pixel(c, 5, 3, c₃)
+            # format to PPM
+            ppm = canvas_to_ppm(c)
+            # split by newlines
+            ppm_lines = split(ppm, '\n')
+            expected_lines = [
+                "255 0 0 0 0 0 0 0 0 0 0 0 0 0 0",
+                "0 0 0 0 0 0 0 128 0 0 0 0 0 0 0",
+                "0 0 0 0 0 0 0 0 0 0 0 0 0 0 255"
+            ]
+            for (line, exp_line) in zip(ppm_lines[4:6], expected_lines)
+                @test line == exp_line
+            end
         end
     end
 end
