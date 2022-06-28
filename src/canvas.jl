@@ -27,6 +27,9 @@ function ppm_scale(c::Color; max_val=255)
 end
 
 function canvas_to_ppm(c::Canvas; max_val=255)
+    # FIXME: this has terrible perfomance
+    # Does Julia have anything similar to string streams
+    # from C++?
     (w, h) = (c.width, c.height)
     ppm_string = "P3\n$(w) $(h)\n$(max_val)\n"
     # uncoalesced memory access RIP
