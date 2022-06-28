@@ -7,7 +7,7 @@ export make_point, make_vec3
 export write_pixel
 export Color
 export Canvas
-export Mat4
+export Mat4, Mat2
 export canvas_to_ppm, ppm_scale
 
 include("vec.jl")

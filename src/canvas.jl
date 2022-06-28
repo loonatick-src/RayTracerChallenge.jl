@@ -7,6 +7,7 @@ struct Canvas{F <: Number}
     function Canvas(w, h, ::Type{F}) where {F <: Number}
         # store image in row-major order
         g = zeros(Color{F}, w, h)
+        # storing image in row-major order
         new{F}(w, h, g)
     end
 end

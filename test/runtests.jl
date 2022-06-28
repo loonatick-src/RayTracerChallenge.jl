@@ -153,7 +153,7 @@ using LinearAlgebra: dot
         @testset "Canvas editing" begin
             red = Color{Ftype}(1, 0, 0)
             write_pixel(cnvs, 2, 3, red)
-            @test cnvs.grid[3,2] == red
+            @test cnvs.grid[2,3] == red
         end
 
         @testset "Canvas to PPM" begin
@@ -169,7 +169,7 @@ using LinearAlgebra: dot
             Ftype = Float16
             c = Canvas(5, 3, Ftype)
             # 3 rows, 5 columns
-            @test size(c.grid) == (3, 5)
+            @test size(c.grid) == (5, 3)
             # construct colors for writing to canvas
             c₁ = Color{Ftype}(1.5, 0, 0)
             c₂ = Color{Ftype}(0, 0.5, 0)
@@ -190,6 +190,22 @@ using LinearAlgebra: dot
             for (line, exp_line) in zip(ppm_lines[4:6], expected_lines)
                 @test line == exp_line
             end
+        end
+    end
+
+    @testset "Matrix tests" begin
+        m = Mat4{Float32}([1.0 2   3   4;
+                      5.5 6.5 7.5 8.5;
+                      9   10  11  12;
+                      13.5 14.5 15.5 16.5])
+        @testset "Matrix constructors" begin
+            @test m[1,1] == 1.0
+            @test m[2,1] == 5.5
+            @test m[2,3] == 7.5
+        end
+
+        @testset "Matrix multiplication" begin
+            
         end
     end
 end
