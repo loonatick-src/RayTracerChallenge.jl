@@ -1,5 +1,6 @@
 module RaytracerChallenge
 
+# TODO: consider using reexport to make this less ugly
 export Vec4, Vec3, Point
 export isPoint, isVec
 export ×, magnitude, length_squared, normalize
@@ -9,6 +10,7 @@ export Color
 export Canvas
 export Mat4, Mat2
 export canvas_to_ppm, ppm_scale
+export submatrix, minor, cofactor
 
 include("vec.jl")
 include("mat.jl")

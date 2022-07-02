@@ -1,6 +1,7 @@
 using RaytracerChallenge
 using Test
-using LinearAlgebra: dot
+using LinearAlgebra: dot, det
+using StaticArrays
 
 @testset "RaytracerChallenge.jl" begin
     # Write your tests here.
@@ -190,6 +191,27 @@ using LinearAlgebra: dot
             for (line, exp_line) in zip(ppm_lines[4:6], expected_lines)
                 @test line == exp_line
             end
+        end
+    end
+
+    @testset "Matrix tests" begin
+        @testset "Submatrix" begin
+            A = @MMatrix [ 1  5  0;
+                          -3  2  7;
+                           0  6 -3]
+            @test submatrix(A, 1, 3) == @MMatrix [-3 2; 0 6]
+
+            A = Mat4{Int64}([-6 1 1 6;
+                              -8 5 8 6;
+                              -1 0 8 2;
+                              -7 1 -1 1])
+            @test submatrix(A, 3, 2) == [-6 1 6; -8 8 6; -7 -1 1]
+        end
+
+        @testset "Minors and cofactors" begin
+            A = [3 5 0; 2 -1 7; 6 -1 5]
+            @test minor(A, 2, 1) == 25.0
+            @test cofactor(A, 2, 1) == -25.0
         end
     end
 end
