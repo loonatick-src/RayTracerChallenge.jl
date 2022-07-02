@@ -95,7 +95,7 @@ using LinearAlgebra: dot
     v₁ = Vec3(1, 2, 3)
     v₂ = Vec3(2, 3, 4)
     @testset "Dot product" begin
-        @test dot(v₁, v₂) == 20
+        @test dot(v₁, v₂) == 1*2 + 2*3 + 3*4
     end
 
     @testset "Cross Product" begin
@@ -190,22 +190,6 @@ using LinearAlgebra: dot
             for (line, exp_line) in zip(ppm_lines[4:6], expected_lines)
                 @test line == exp_line
             end
-        end
-    end
-
-    @testset "Matrix tests" begin
-        m = Mat4{Float32}([1.0 2   3   4;
-                      5.5 6.5 7.5 8.5;
-                      9   10  11  12;
-                      13.5 14.5 15.5 16.5])
-        @testset "Matrix constructors" begin
-            @test m[1,1] == 1.0
-            @test m[2,1] == 5.5
-            @test m[2,3] == 7.5
-        end
-
-        @testset "Matrix multiplication" begin
-            
         end
     end
 end
