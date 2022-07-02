@@ -1,7 +1,7 @@
 using StaticArrays
 import LinearAlgebra: dot
 
-Vec4{T} = SVector{4, T}
+Vec4{T} = MVector{4, T}
 
 Vec3(t::NTuple{3, T})  where {T} = Vec4(t..., zero(T))
 Vec3(x::T, y::T, z::T) where {T} = Vec4(x, y, z, zero(T))
