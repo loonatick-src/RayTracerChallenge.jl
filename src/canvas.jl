@@ -48,3 +48,28 @@ end
 function canvas_to_ppm(w, h; max_val=255)
     "P3\n$(w) $(h)\n$(max_val)"
 end
+
+function canvas_to_ppm_matrix(c::Canvas; max_val=255)
+    (m, n) = size(c.grid)
+    pixel_count = m*n
+    ppm_buffer = Matrix{Int}(undef, 3, pixel_count)
+    for (idx, clr) in enumerate(c.grid)
+        (r, g, b) = ppm_scale(clr; max_val=max_val)
+        ppm_buffer[1, idx] = r
+        ppm_buffer[2, idx] = g
+        ppm_buffer[3, idx] = b
+    end
+    ppm_buffer
+end
+
+function canvas_to_ppm_matrix!(ppm_buffer::Matrix{Int}, c::Canvas; max_val=255)
+    (m, n) = size(c.grid)
+    (p, q) = size(ppm_buffer)
+    @assert 3*m*n == p*q  # TODO: change to exception etc
+    for (idx, clr) in enumerate(c.grid)
+        (r, g, b) = ppm_scale(clr; max_val=max_val)
+        ppm_buffer[1, idx] = r
+        ppm_buffer[2, idx] = g
+        ppm_buffer[3, idx] = b
+    end
+end

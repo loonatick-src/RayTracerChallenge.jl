@@ -191,6 +191,20 @@ using StaticArrays
             for (line, exp_line) in zip(ppm_lines[4:6], expected_lines)
                 @test line == exp_line
             end
+
+            ppm_matrix = canvas_to_ppm_matrix(c)
+            expected_values = [ 255 0 0 0 0 0 0 0 0 0 0 0 0 0 0;
+                                0 0 0 0 0 0 0 128 0 0 0 0 0 0 0;
+                                0 0 0 0 0 0 0 0 0 0 0 0 0 0 255]
+
+            # let's start by comparing sizes
+            (mₑ, nₑ) = size(expected_values)
+            (m, n) = size(c.grid)
+            @test 3 * m * n == mₑ * nₑ
+
+            for (clr_ppm, clr_exp) in zip(ppm_matrix, expected_values)
+                @test clr_ppm == clr_exp
+            end
         end
     end
 

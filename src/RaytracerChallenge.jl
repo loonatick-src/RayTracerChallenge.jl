@@ -11,6 +11,7 @@ export Canvas
 export Mat4, Mat2
 export canvas_to_ppm, ppm_scale
 export submatrix, minor, cofactor
+export canvas_to_ppm_matrix, canvas_to_ppm_matrix!
 
 include("vec.jl")
 include("mat.jl")
