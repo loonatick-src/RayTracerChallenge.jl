@@ -1,7 +1,9 @@
 using RaytracerChallenge
 using Test
-using LinearAlgebra: dot, det
+using LinearAlgebra: dot, det, inv
 using StaticArrays
+
+# TODO: refactor tests into different source files
 
 @testset "RaytracerChallenge.jl" begin
     # Write your tests here.
@@ -226,6 +228,35 @@ using StaticArrays
             A = [3 5 0; 2 -1 7; 6 -1 5]
             @test minor(A, 2, 1) == 25.0
             @test cofactor(A, 2, 1) == -25.0
+        end
+    end
+
+    @testset "Affine (?) transformations" begin
+        transform = translation(5.0, -3.0, 2.0)
+        p = Point(-3.0, 4.0, 5.0)
+        @testset "Multiplyting by translation matrices" begin
+            @test transform * p == Point(2.0, 1.0, 7.0)    
+        end
+        
+        @testset "Multiplying by the inverse of a translation matrix" begin
+            inverse_transform = inv(transform)
+            @test inverse_transform * p == Point(2.0, 1.0, 7.0)
+        end
+
+        v = Vec3(-3.0, 4.0, 5.0)
+        @testset "Translation does not affect vectors" begin
+            @test transform * v == v
+        end
+
+        transform = scaling(2.0, 3.0, 4.0)
+        @testset "Scaling matrix applied to a point" begin
+            p = Point(-4.0, 6.0, 8.0)
+            @test transform * p == Point(-8.0, 18.0, 32.0)
+        end
+
+        @testset "Scaling matrix applied to a vector" begin
+            v = Vec3(-4.0, 6.0, 8.0)
+            @test transform * v == Vec3(-8.0, 18.0, 32.0)
         end
     end
 end

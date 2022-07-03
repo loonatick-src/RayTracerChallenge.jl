@@ -49,3 +49,42 @@ function cofactor(M, row, col)
     end
     rv
 end
+
+function translation(x::T, y::T, z::T) where {T}
+    var_one = one(T)
+    var_zero = zero(T)
+    transform = @MMatrix [ var_one var_zero var_zero x;
+                           var_zero var_one var_zero y;
+                           var_zero var_zero var_one z;
+                           var_zero var_zero var_zero var_one;]
+    transform
+end
+
+function translation!(transform::Mat4{T}, x::T, y::T, z::T) where {T}
+    u = one(T)
+    o = zero(T)
+    # beautiful
+    transform[1:end, 1] .= @SVector [u o o o]
+    transform[1:end, 2] .= @SVector [o u o o]
+    transform[1:end, 3] .= @SVector [o o u o]
+    transform[1:end, 4] .= @SVector [x y z u]
+end
+
+function scaling(x::T, y::T, z::T) where {T}
+    o = zero(T)
+    u = one(T)
+    @MMatrix [x o o o;
+              o y o o;
+              o o z o;
+              o o o u]
+end
+
+function scaling!(transform::Mat4{T}, x::T, y::T, z::T) where {T}
+    o = zero(T)
+    u = one(T)
+    transform[1:end, 1] .= @SVector [x o o o]
+    transform[1:end, 2] .= @SVector [o y o o]
+    transform[1:end, 3] .= @SVector [o o z o]
+    transform[1:end, 4] .= @SVector [o o o u]
+end
+        
