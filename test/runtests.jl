@@ -1,4 +1,4 @@
-using RaytracerChallenge
+using RTC
 using Test
 using LinearAlgebra: dot, det, inv
 using StaticArrays

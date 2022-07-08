@@ -1,4 +1,4 @@
-module RaytracerChallenge
+module RTC
 
 # TODO: consider using reexport to make this less ugly
 export Vec4, Vec3, Point
