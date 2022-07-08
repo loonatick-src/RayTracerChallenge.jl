@@ -1,4 +1,4 @@
-using RTC
+using RayTracerChallenge
 using Test
 using LinearAlgebra: dot, det, inv
 using StaticArrays
@@ -70,6 +70,8 @@ using StaticArrays
         @test zero(typeof(v)) - v == Vec3(-x, -y, -z)
     end
 
+    # turns out π is an irrational number
+    # who knew
     approx_π = convert(Float64, π)
     @testset "scalar multiplication" begin
         @test 2v == Vec3(2x, 2y, 2z)
@@ -233,14 +235,16 @@ using StaticArrays
 
     @testset "Affine (?) transformations" begin
         transform = translation(5.0, -3.0, 2.0)
+        @test transform == [1 0 0 5;
+                             0 1 0 -3;
+                             0 0 1 2;
+                             0 0 0 1]
         p = Point(-3.0, 4.0, 5.0)
         @testset "Multiplyting by translation matrices" begin
-            @test transform * p == Point(2.0, 1.0, 7.0)    
-        end
-        
-        @testset "Multiplying by the inverse of a translation matrix" begin
+            transformed_p = transform * p
+            @test transform * p == Point(2.0, 1.0, 7.0)
             inverse_transform = inv(transform)
-            @test inverse_transform * p == Point(2.0, 1.0, 7.0)
+            @test inverse_transform * transformed_p == p
         end
 
         v = Vec3(-3.0, 4.0, 5.0)

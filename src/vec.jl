@@ -1,6 +1,8 @@
 using StaticArrays
+using SIMD
 import LinearAlgebra: dot
 
+# TODO: change to non-heap-alloc'd vector type
 Vec4{T} = MVector{4, T}
 
 Vec3(t::NTuple{3, T})  where {T} = Vec4(t..., zero(T))
