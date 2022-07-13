@@ -16,3 +16,5 @@ Heap-alloc'd data types are out of the question. While I am concerned about the 
 I do not know for certain if mutating them is a common case or not. If "Ray Tracing in One Weekend" is
 anything to go by, it most definitely is as we compute a running average. The alternative would be the
 a much more memory-heavy allocation of an array of Vectors of and subsequent reduction.
+
+**Note to self:** When in doubt, just measure and benchmark.
