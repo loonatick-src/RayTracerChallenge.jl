@@ -21,7 +21,7 @@
 13. [ ] Cylinders
 14. [ ] Groups
 15. [ ] Triangles
-16. [ ] Constructive Solid Geometry Solid Geometry (CSG)
+16. [ ] Constructive Solid Geometry (CSG)
 17. [ ] Next Steps
 ## TODO
 1. [ ] Replace `MVector` with non heap-alloc'd array types. Consider
