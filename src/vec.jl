@@ -2,14 +2,20 @@ using StaticArrays
 using SIMD
 import LinearAlgebra: dot
 
+# TODO: using a VecElement N-tuple in the constructor hints the compiler
+# to use the vector register ABI instead of the scalar ABI
+# examine `@code_native` for these constructors
 Vec4{T} = Vec{4, T}
+# convenience constructor
 Vec4(x::T, y::T, z::T, w::T) where {T} = Vec4{T}((x, y, z, w))
 
+# 3-vector
 Vec3(t::NTuple{3, T})  where {T} = Vec4{T}((t..., zero(T)))
 Vec3(x::T, y::T, z::T) where {T} = Vec4{T}((x, y, z, zero(T)))
 
-Point(t::NTuple{3, T}) where {T} = Vec4{T}((t..., one(T)))
-Point(x::T, y::T, z::T) where {T} = Vec4{T}((x, y, z, one(T)))
+# point
+@inline Point(t::NTuple{3, T}) where {T} = Vec4{T}((t..., one(T)))
+@inline Point(x::T, y::T, z::T) where {T} = Vec4{T}((x, y, z, one(T)))
 
 """Cross Product"""
 function ×(v₁::Vec4, v₂::Vec4)

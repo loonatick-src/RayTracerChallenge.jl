@@ -1,5 +1,9 @@
-using StaticArrays
+using StaticArrays: SMatrix
+using StaticArrays: @SVector
 using LinearAlgebra: det
+
+# hack
+using SIMD: Vec
 
 Mat4{T} = SMatrix{4, 4, T}
 Mat2{T} = SMatrix{2, 2, T}
@@ -78,4 +82,29 @@ function scaling!(transform::Mat4{T}, x::T, y::T, z::T) where {T}
     transform[1:end, 3] .= @SVector [o, o, z, o]
     transform[1:end, 4] .= @SVector [o, o, o, u]
 end
-        
+
+import Base: *
+
+"""Matrix-vector product where the matrix is
+a `Mat4`and the vector is a `Vec4`"""
+function *(m::Mat4{T}, v::SIMD.Vec{4,T}) where {T}
+    # unrolling the whole thing for now
+    v1 = v[1]
+    # broadcast
+    v1_bcast = SIMD.Vec{4,T}(v1)
+    mv = v1_bcast * Vec4((@view m[1:end, 1])...)
+
+    v2 = v[2]
+    v2_bcast = SIMD.Vec{4,T}(v2)
+    mv += v2_bcast * Vec4((@view m[1:end, 2])...)
+
+    v3 = v[3]
+    v3_bcast = SIMD.Vec{4,T}(v3)
+    mv += v3_bcast * Vec4((@view m[1:end, 3])...)
+
+    v4 = v[4]
+    v4_bcast = SIMD.Vec{4,T}(v4)
+    mv += v4_bcast * Vec4((@view m[1:end, 4])...)
+
+    mv
+end

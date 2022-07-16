@@ -245,25 +245,25 @@ using SIMD
         p = Point(-3.0, 4.0, 5.0)
         @testset "Multiplyting by translation matrices" begin
             transformed_p = transform * p
-            @test transform * p == Point(2.0, 1.0, 7.0)
+            @test all(transform * p == Point(2.0, 1.0, 7.0))
             inverse_transform = inv(transform)
-            @test inverse_transform * transformed_p == p
+            @test all(inverse_transform * transformed_p == p)
         end
 
         v = Vec3(-3.0, 4.0, 5.0)
         @testset "Translation does not affect vectors" begin
-            @test transform * v == v
+            @test all(transform * v == v)
         end
 
         transform = scaling(2.0, 3.0, 4.0)
         @testset "Scaling matrix applied to a point" begin
             p = Point(-4.0, 6.0, 8.0)
-            @test transform * p == Point(-8.0, 18.0, 32.0)
+            @test all(transform * p == Point(-8.0, 18.0, 32.0))
         end
 
         @testset "Scaling matrix applied to a vector" begin
             v = Vec3(-4.0, 6.0, 8.0)
-            @test transform * v == Vec3(-8.0, 18.0, 32.0)
+            @test all(transform * v == Vec3(-8.0, 18.0, 32.0))
         end
     end
 end
