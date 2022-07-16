@@ -1,7 +1,10 @@
+using Revise
+
 using RayTracerChallenge
 using Test
 using LinearAlgebra: dot, det, inv
 using StaticArrays
+using SIMD
 
 # TODO: refactor tests into different source files
 
@@ -38,26 +41,26 @@ using StaticArrays
     v₂ = Vec3(-2, 3, 1)
     p₁ = Point(-2, 3, 1)
     @testset "Vector arithmetic" begin
-        @test v₁ + v₂ == Vec3(
+        @test all(v₁ + v₂ == Vec3(
                             v₁[1] + v₂[1],
                             v₁[2] + v₂[2],
-                            v₁[3] + v₂[3])
-        @test v₁ - v₂ == Vec3(
+                            v₁[3] + v₂[3]))
+        @test all(v₁ - v₂ == Vec3(
                             v₁[1] - v₂[1],
                             v₁[2] - v₂[2],
-                            v₁[3] - v₂[3])
+                            v₁[3] - v₂[3]))
     end
 
     @testset "Vector-Point arithmetic" begin
-        @test p₁ + v₁ == Point(
+        @test all(p₁ + v₁ == Point(
                             v₁[1] + p₁[1],
                             v₁[2] + p₁[2],
-                            v₁[3] + p₁[3])
+                            v₁[3] + p₁[3]))
         
-        @test p₁ - v₁ == Point(
+        @test all(p₁ - v₁ == Point(
                             p₁[1] - v₁[1],
                             p₁[2] - v₁[2],
-                            p₁[3] - v₁[3])
+                            p₁[3] - v₁[3]))
 
         @test isPoint(p₁ - v₁)
         @test isPoint(p₁ + v₁)
@@ -65,19 +68,19 @@ using StaticArrays
 
     @testset "Negation" begin
         @test 0.0 == -0.0
-        @test -v == Vec3(-x, -y, -z)
-        @test -v - Vec3(-x, -y, -z) == zero(v)
-        @test zero(typeof(v)) - v == Vec3(-x, -y, -z)
+        @test all(-v == Vec3(-x, -y, -z))
+        @test all(-v - Vec3(-x, -y, -z) == zero(v))
+        @test all(zero(typeof(v)) - v == Vec3(-x, -y, -z))
     end
 
     # turns out π is an irrational number
     # who knew
     approx_π = convert(Float64, π)
     @testset "scalar multiplication" begin
-        @test 2v == Vec3(2x, 2y, 2z)
-        @test v/2 == Vec3(x/2, y/2, z/2)
-        @test v*2 == Vec3(2x, 2y, 2z)
-        @test approx_π*v == Vec3(approx_π*x, approx_π*y, approx_π*z)
+        @test all(2v == Vec3(2x, 2y, 2z))
+        @test all(v/2 == Vec3(x/2, y/2, z/2))
+        @test all(v*2 == Vec3(2x, 2y, 2z))
+        @test all(approx_π*v == Vec3(approx_π*x, approx_π*y, approx_π*z))
     end
 
     @testset "Vector magnitude" begin
@@ -91,10 +94,10 @@ using StaticArrays
 
     @testset "Normalisation" begin
         v = Vec3(4.0, 0.0, 0.0)
-        @test normalize(v) == Vec3(1.0, 0.0, 0.0)
+        @test all(normalize(v) == Vec3(1.0, 0.0, 0.0))
         v = Vec3(1.0, 2.0, 3.0)
         l2norm = √(1.0^2 + 2.0^2 + 3.0^2)
-        @test normalize(v) == Vec3(1/l2norm, 2/l2norm, 3/l2norm)
+        @test all(normalize(v) == Vec3(1/l2norm, 2/l2norm, 3/l2norm))
     end
 
     v₁ = Vec3(1, 2, 3)
@@ -104,9 +107,9 @@ using StaticArrays
     end
 
     @testset "Cross Product" begin
-        @test v₁ × v₂ == Vec3(-1, 2, -1)
-        @test v₂ × v₁ == Vec3(1, -2, 1)
-        @test v₁ × v₁ == Vec3(0, 0, 0)
+        @test all(v₁ × v₂ == Vec3(-1, 2, -1))
+        @test all(v₂ × v₁ == Vec3(1, -2, 1))
+        @test all(v₁ × v₁ == Vec3(0, 0, 0))
     end
 
     m = Mat4(
@@ -242,25 +245,25 @@ using StaticArrays
         p = Point(-3.0, 4.0, 5.0)
         @testset "Multiplyting by translation matrices" begin
             transformed_p = transform * p
-            @test transform * p == Point(2.0, 1.0, 7.0)
+            @test all(transform * p == Point(2.0, 1.0, 7.0))
             inverse_transform = inv(transform)
-            @test inverse_transform * transformed_p == p
+            @test all(inverse_transform * transformed_p == p)
         end
 
         v = Vec3(-3.0, 4.0, 5.0)
         @testset "Translation does not affect vectors" begin
-            @test transform * v == v
+            @test all(transform * v == v)
         end
 
         transform = scaling(2.0, 3.0, 4.0)
         @testset "Scaling matrix applied to a point" begin
             p = Point(-4.0, 6.0, 8.0)
-            @test transform * p == Point(-8.0, 18.0, 32.0)
+            @test all(transform * p == Point(-8.0, 18.0, 32.0))
         end
 
         @testset "Scaling matrix applied to a vector" begin
             v = Vec3(-4.0, 6.0, 8.0)
-            @test transform * v == Vec3(-8.0, 18.0, 32.0)
+            @test all(transform * v == Vec3(-8.0, 18.0, 32.0))
         end
     end
 end

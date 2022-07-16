@@ -2,14 +2,20 @@ using StaticArrays
 using SIMD
 import LinearAlgebra: dot
 
-# TODO: change to non-heap-alloc'd vector type
-Vec4{T} = MVector{4, T}
+# TODO: using a VecElement N-tuple in the constructor hints the compiler
+# to use the vector register ABI instead of the scalar ABI
+# examine `@code_native` for these constructors
+Vec4{T} = Vec{4, T}
+# convenience constructor
+Vec4(x::T, y::T, z::T, w::T) where {T} = Vec4{T}((x, y, z, w))
 
-Vec3(t::NTuple{3, T})  where {T} = Vec4(t..., zero(T))
-Vec3(x::T, y::T, z::T) where {T} = Vec4(x, y, z, zero(T))
+# 3-vector
+Vec3(t::NTuple{3, T})  where {T} = Vec4{T}((t..., zero(T)))
+Vec3(x::T, y::T, z::T) where {T} = Vec4{T}((x, y, z, zero(T)))
 
-Point(t::NTuple{3, T}) where {T} = Vec4(t..., one(T))
-Point(x::T, y::T, z::T) where {T} = Vec4(x, y, z, one(T))
+# point
+@inline Point(t::NTuple{3, T}) where {T} = Vec4{T}((t..., one(T)))
+@inline Point(x::T, y::T, z::T) where {T} = Vec4{T}((x, y, z, one(T)))
 
 """Cross Product"""
 function ×(v₁::Vec4, v₂::Vec4)
@@ -21,9 +27,14 @@ function ×(v₁::Vec4, v₂::Vec4)
     Vec3(x,y,z)
 end
 
+"""Dot Product"""
+function dot(v₁::Vec4{T}, v₂::Vec4{T}) where {T}
+    sum(v₁ * v₂)
+end
+
 """length_squared"""
 function length_squared(v::Vec4)
-    sum(v.^2)
+    sum(v^2)
 end
 
 """Magnitude"""
