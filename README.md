@@ -6,10 +6,11 @@
 4. [ ] Matrix Transformations (WIP)
     1. [X] Translation
     2. [X] Scaling
-    3. [ ] Rotation
-    4. [ ] Shearing
+    3. [X] Rotation
+    4. [X] Shearing
     5. [ ] Chaining Transformations
     6. [ ] Putting it Together
+    7. [ ] All tests
 5. [ ] Ray-Sphere Intersections
 6. [ ] Light and Shading
 7. [ ] Making a Scene
