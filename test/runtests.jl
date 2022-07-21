@@ -13,7 +13,7 @@ using SIMD
     (x, y, z, w) = (4.3, -4.1, 3.1, 2.8)
     v = Vec3(x, y, z)
     p = Point(x, y, z)
-    t = Vec4(x, y, z, w)
+    t = Vec4((x, y, z, w))
 
     @testset "Vec4 Basics" begin
         @test t[1] == x
@@ -264,6 +264,45 @@ using SIMD
         @testset "Scaling matrix applied to a vector" begin
             v = Vec3(-4.0, 6.0, 8.0)
             @test all(transform * v == Vec3(-8.0, 18.0, 32.0))
+        end
+    end
+
+    @testset "Rotations" begin
+        p = Point(0.0, 1.0, 0.0)
+        half_quarter = rotation_x(π/4)
+        full_quarter = rotation_x(π/2)
+
+        @testset "Rotate a point about x-axis" begin
+            @test all( half_quarter * p == Point(0.0, √(2)/2, √(2)/2) )
+            @test all( full_quarter * p == Point(0.0, 1.0   , 1.0   ) )
+        end
+
+        inverse_x_rot = inv(half_quarter)
+        @testset "Inverse of an x-rotation rotates in the opposite direction" begin
+            @test all(inv * p == Point(0.0, √(2)/2, -√(2)/2))
+        end
+
+        p = Point(0.0, 0.0, 1.0)
+        half_quarter = rotation_y(π/4)
+        full_quarter = rotation_y(π/2)
+        @testset "Rotations about the y-axis" begin
+            @test all(half_quarter * p == Point(√(2)/2, 0.0, -√(2)/2))
+            @test all(full_quarter * p == Point(1.0, 0.0, 0.0))
+        end
+
+        p = Point(0.0, 1.0, 0.0)
+        half_quarter = rotation_z(π/4)
+        full_quarter = rotation_z(π/2)
+        @testset "Rotations about the z-axis" begin
+            @test all( half_quarter * p == Point(-√(2)/2, √(2)/2, 0) )
+            @test all( full_quarter * p == Point(-1.0, 0, 0) )
+        end
+
+        p = Point(2.0, 3.0, 4.0)
+        o = zero(Float64)
+        transform = shearing(1.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+        @testset "Shearing" begin
+            @test all( transform * p == Point(5.0, 3.0, 4.0) )
         end
     end
 end
