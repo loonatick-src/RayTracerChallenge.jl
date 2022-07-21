@@ -6,8 +6,9 @@ import LinearAlgebra: dot
 # to use the vector register ABI instead of the scalar ABI
 # examine `@code_native` for these constructors
 Vec4{T} = Vec{4, T}
-# convenience constructor
-Vec4(x::T, y::T, z::T, w::T) where {T} = Vec4{T}((x, y, z, w))
+# convenience constructors
+Vec4(T::Type, x, y, z, w) = Vec4{T}((x, y, z, w))
+Vec4(xyzw::NTuple{4, T}) where{T} = Vec{4, T}(xyzw)
 
 # 3-vector
 Vec3(t::NTuple{3, T})  where {T} = Vec4{T}((t..., zero(T)))

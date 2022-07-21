@@ -13,11 +13,13 @@ export canvas_to_ppm, ppm_scale
 export submatrix, minor, cofactor
 export canvas_to_ppm_matrix, canvas_to_ppm_matrix!
 export scaling, translation
+export rotation_x, rotation_y, rotation_z, shearing
 
 include("vec.jl")
 include("mat.jl")
 include("color.jl")
 include("canvas.jl")
-
+include("transform.jl")
+include("utils.jl")
 
 end
